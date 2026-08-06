@@ -27,6 +27,7 @@
 #include <xcb/present.h>
 #include <xcb/shm.h>
 
+#include <stdatomic.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -52,6 +53,11 @@
 #ifdef HAVE_SYS_SHM_H
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#endif
+
+/* Define VK_OBJECT_TYPE_SWAPCHAIN_KHR if not already defined */
+#ifndef VK_OBJECT_TYPE_SWAPCHAIN_KHR
+#define VK_OBJECT_TYPE_SWAPCHAIN_KHR VK_OBJECT_TYPE_SWAPCHAIN_KHR
 #endif
 
 struct wsi_x11_connection {
@@ -929,7 +935,6 @@ wsi_x11_acquire_next_image(struct wsi_swapchain *wsi_chain,
                            uint32_t *image_index)
 {
    struct wsi_x11_swapchain *chain = (struct wsi_x11_swapchain *)wsi_chain;
-   xcb_generic_event_t *event;
    VkResult result;
    struct timespec abs_timespec;
    uint64_t abs_timeout = 0;
@@ -1322,8 +1327,6 @@ wsi_x11_surface_create_swapchain(VkIcdSurfaceBase *icd_surface,
    chain->base.get_wsi_image = wsi_x11_get_wsi_image;
    chain->base.acquire_next_image = wsi_x11_acquire_next_image;
    chain->base.queue_present = wsi_x11_queue_present;
-
-   if (!wsi_device->sw)
 
    chain->base.release_images = wsi_x11_release_images;
    chain->base.present_mode = present_mode;
