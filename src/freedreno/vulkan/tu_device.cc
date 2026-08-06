@@ -2117,7 +2117,7 @@ tu_get_system_heap_size(struct tu_physical_device *physical_device)
     
    float *percent = &physical_device->instance->drirc.misc.heap_memory_percent;
 
-   uint64_t available_ram = os_get_gpu_heap_size(*percent, percent);
+   available_ram = os_get_gpu_heap_size(*percent, percent);
    assert(available_ram);
 
    if (physical_device->va_size)
